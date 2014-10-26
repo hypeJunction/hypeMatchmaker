@@ -1,0 +1,32 @@
+{
+	"name": "hypejunction/hypematchmaker",
+	"type": "elgg-plugin",
+	"description": "Match users by existing relationships, second degree connections, group membership and profile information",
+	"homepage": "http://hypejunction.com",
+	"keywords": [
+		"elgg", "plugin", "suggestions"
+	],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Ismayil Khayredinov",
+			"email": "info@hypejunction.com"
+		}
+	],
+	"extra": {
+		"installer-name": "hypeMatchmaker"
+	},
+	"config": {
+		"vendor-dir": "vendors",
+		"preferred-install": "dist"
+	},
+	"require": {
+		"php": ">=5.3.3",
+		"composer/installers": "1.0.*"
+	},
+	"autoload": {
+		"psr-4": {
+			"hypeJunction\\": "classes/hypeJunction/"
+		}
+	}
+}
