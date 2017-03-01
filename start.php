@@ -15,7 +15,7 @@ use hypeJunction\Matchmaker\Router;
 
 elgg_register_event_handler('init', 'system', function() {
 
-// Routes
+	// Routes
 	elgg_register_plugin_hook_handler('route', 'friends', [Router::class, 'routeFriends']);
 
 	// Menus
@@ -29,4 +29,6 @@ elgg_register_event_handler('init', 'system', function() {
 	// Actions
 	elgg_register_action('matchmaker/refresh', __DIR__ . '/actions/matchmaker/refresh.php');
 	elgg_register_action('matchmaker/mute', __DIR__ . '/actions/matchmaker/mute.php');
+
+	elgg_extend_view('elgg.css', 'framework/matchmaker/match.css');
 });

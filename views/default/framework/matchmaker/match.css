@@ -1,0 +1,8 @@
+.matchmaker-stat {
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
+.matchmaker-stat:last-child {
+	border-bottom: none;
+}
+
