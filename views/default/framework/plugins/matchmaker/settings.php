@@ -21,28 +21,26 @@ if ($rows) {
 }
 
 $setting_name = UserMatchmaker::CONNECTION_RELATIONSHIP_NAMES;
-echo '<div>';
-echo '<label>' . elgg_echo("matchmaker:settings:connection_relationship_names") . '</label>';
-echo '<span class="elgg-text-help">' . elgg_echo("matchmaker:settings:connection_relationship_names:help") . '</span>';
-echo elgg_view('input/checkboxes', array(
+echo elgg_view_field([
+	'#type' => 'checkboxes',
+	'#label' => elgg_echo("matchmaker:settings:connection_relationship_names"),
+	'#help' => elgg_echo("matchmaker:settings:connection_relationship_names:help"),
 	'default' => false,
 	'name' => "params[$setting_name]",
-	'value' => (isset($entity->$setting_name)) ? unserialize($entity->$setting_name) : array('friend'),
+	'value' => (isset($entity->$setting_name)) ? unserialize($entity->$setting_name) : ['friend'],
 	'options' => $user_to_user_relationship_names,
-));
-echo '</div>';
+]);
 
 $setting_name = UserMatchmaker::FRIENDSHIP_RELATIONSHIP_NAMES;
-echo '<div>';
-echo '<label>' . elgg_echo("matchmaker:settings:friendship_relationship_names") . '</label>';
-echo '<span class="elgg-text-help">' . elgg_echo("matchmaker:settings:friendship_relationship_names:help") . '</span>';
-echo elgg_view('input/checkboxes', array(
+echo elgg_view_field([
+	'#type' => 'checkboxes',
+	'#label' => elgg_echo("matchmaker:settings:friendship_relationship_names"),
+	'#help' => elgg_echo("matchmaker:settings:friendship_relationship_names:help"),
 	'default' => false,
 	'name' => "params[$setting_name]",
 	'value' => (isset($entity->$setting_name)) ? unserialize($entity->$setting_name) : array('friend'),
 	'options' => $user_to_user_relationship_names,
-));
-echo '</div>';
+]);
 
 // User to group relationship names
 $query = "SELECT DISTINCT(r.relationship) 
@@ -60,16 +58,15 @@ if ($rows) {
 }
 
 $setting_name = UserMatchmaker::MEMBERSHIP_RELATIONSHIP_NAMES;
-echo '<div>';
-echo '<label>' . elgg_echo("matchmaker:settings:membership_relationship_names") . '</label>';
-echo '<span class="elgg-text-help">' . elgg_echo("matchmaker:settings:membership_relationship_names:help") . '</span>';
-echo elgg_view('input/checkboxes', array(
+echo elgg_view_field([
+	'#type' => 'checkboxes',
+	'#label' => elgg_echo("matchmaker:settings:membership_relationship_names"),
+	'#help' => elgg_echo("matchmaker:settings:membership_relationship_names:help"),
 	'default' => false,
 	'name' => "params[$setting_name]",
 	'value' => (isset($entity->$setting_name)) ? unserialize($entity->$setting_name) : array('member'),
 	'options' => $user_to_group_relationship_names,
-));
-echo '</div>';
+]);
 
 $profile_fields = elgg_get_config('profile_fields');
 if (is_array($profile_fields)) {
@@ -78,16 +75,15 @@ if (is_array($profile_fields)) {
 	}
 
 	$setting_name = UserMatchmaker::METADATA_NAMES;
-	echo '<div>';
-	echo '<label>' . elgg_echo("matchmaker:settings:metadata_names") . '</label>';
-	echo '<span class="elgg-text-help">' . elgg_echo("matchmaker:settings:metadata_names:help") . '</span>';
-	echo elgg_view('input/checkboxes', array(
+	echo elgg_view_field([
+		'#type' => 'checkboxes',
+		'#label' => elgg_echo("matchmaker:settings:metadata_names"),
+		'#help' => elgg_echo("matchmaker:settings:metadata_names:help"),
 		'default' => false,
 		'name' => "params[$setting_name]",
 		'value' => (isset($entity->$setting_name)) ? unserialize($entity->$setting_name) : array(),
 		'options' => $metadata_names,
-	));
-	echo '</div>';
+	]);
 }
 
 $weights = array(
@@ -98,17 +94,20 @@ $weights = array(
 	UserMatchmaker::SHARED_METADATA_RELATIONSHIPS,
 );
 
+$weight_fields = [];
 foreach ($weights as $w) {
-	echo '<fieldset class="elgg-fieldset">';
-	echo '<legend>' . elgg_echo("matchmaker:settings:$w") . '</legend>';
-	echo '<p>' . elgg_echo("matchmaker:settings:$w:help") . '</p>';
-	echo '<div>';
-	echo '<label>' . elgg_echo("matchmaker:settings:weight") . '</label>';
-	echo '<p class="elgg-text-help">' . elgg_echo("matchmaker:settings:weight:help") . '</p>';
-	echo elgg_view('input/text', array(
+	$weight_fields[] = [
+		'#type' => 'text',
+		'#label' => elgg_echo("matchmaker:settings:$w"),
+		'#help' => elgg_echo("matchmaker:settings:$w:help"),
 		'name' => "params[$w]",
 		'value' => (isset($entity->$w)) ? $entity->$w : 1,
-	));
-	echo '</div>';
-	echo '</fieldset>';
+	];
 }
+
+echo elgg_view_field([
+	'#type' => 'fieldset',
+	'#label' => elgg_echo("matchmaker:settings:weight"),
+	'#help' => elgg_echo("matchmaker:settings:weight:help"),
+	'fields' => $weight_fields,
+]);

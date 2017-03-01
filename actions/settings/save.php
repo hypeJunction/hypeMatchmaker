@@ -8,8 +8,7 @@ $params = get_input('params', array(), false); // don't filter the results so th
 $plugin = elgg_get_plugin_from_id('hypeMatchmaker');
 
 if (!($plugin instanceof ElggPlugin)) {
-	register_error(elgg_echo('plugins:settings:save:fail', array('hypeMatchmaker')));
-	forward(REFERER);
+	return elgg_error_response(elgg_echo('plugins:settings:save:fail', ['hypeMatchmaker']));
 }
 
 $plugin_name = $plugin->getManifest()->getName();
@@ -22,11 +21,8 @@ foreach ($params as $k => $v) {
 	}
 	$result = $plugin->setSetting($k, $v);
 	if (!$result) {
-		register_error(elgg_echo('plugins:settings:save:fail', array($plugin_name)));
-		forward(REFERER);
-		exit;
+		return elgg_error_response(elgg_echo('plugins:settings:save:fail', [$plugin_name]));
 	}
 }
 
-system_message(elgg_echo('plugins:settings:save:ok', array($plugin_name)));
-forward(REFERER);
+return elgg_ok_response('', elgg_echo('plugins:settings:save:ok', [$plugin_name]));
