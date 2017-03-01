@@ -45,6 +45,7 @@ if ($shared_connection_guids = $match->getSharedConnectionGuids()) {
 		'gallery_class' => 'elgg-gallery-users',
 		'limit' => 0,
 		'pagination' => false,
+		'item_view' => 'framework/matchmaker/icon',
 	));
 	echo '</div>';
 }
@@ -58,6 +59,7 @@ if ($shared_group_guids = $match->getSharedGroupGuids()) {
 		'gallery_class' => 'elgg-gallery-groups',
 		'limit' => 0,
 		'pagination' => false,
+		'item_view' => 'framework/matchmaker/icon',
 	));
 	echo '</div>';
 }

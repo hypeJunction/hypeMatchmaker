@@ -98,6 +98,7 @@ class UserMatchmaker extends Matchmaker {
 			'limit' => $this->limit,
 			'offset' => $this->offset,
 			'no_results' => elgg_echo('matchmaker:no_results'),
+			'item_view' => 'framework/matchmaker/match',
 		);
 	}
 

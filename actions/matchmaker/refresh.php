@@ -1,19 +1,25 @@
 <?php
 
-namespace hypeJunction\Matchmaker;
+use hypeJunction\Matchmaker\Matchmaker;
 
-$user = elgg_get_logged_in_user_entity();
+$guid = get_input('guid');
+$user = get_entity($guid);
 
-$result = elgg_delete_annotations(array(
-	'annotation_owner_guids' => $user->guid,
-	'annotation_names' => array(Matchmaker::ANNOTATION_NAME_INFO, Matchmaker::ANNOTATION_NAME_SCORE),
-	'limit' => 0,
-));
-
-if ($result) {
-	system_message(elgg_echo('matchmaker:refresh:success'));
-} else {
-	reigster_error(elgg_echo('matchmaker:refresh:error'));
+if (!$user || !$user->canEdit()) {
+	return elgg_error_response(elgg_echo('matchmaker:refresh:error'));
 }
 
-forward(REFERER);
+$result = elgg_delete_annotations([
+	'annotation_owner_guids' => $user->guid,
+	'annotation_names' => [
+		Matchmaker::ANNOTATION_NAME_INFO,
+		Matchmaker::ANNOTATION_NAME_SCORE,
+	],
+	'limit' => 0,
+]);
+
+if ($result) {
+	return elgg_ok_response('', elgg_echo('matchmaker:refresh:success'));
+}
+
+return elgg_error_response(elgg_echo('matchmaker:refresh:error'));

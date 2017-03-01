@@ -3,7 +3,7 @@
 $english = array(
 
 	'matchmaker:suggestions:refresh' => 'Refresh',
-	'matchmaker:suggestions:users' => 'Suggested users',
+	'matchmaker:suggestions:users' => 'Suggested friends',
 	
 	'matchmaker:settings:connection_relationship_names' => 'Connections',
 	'matchmaker:settings:connect_relationship_names:help' => 'Specify which user to user relationships should be used in matching algorithms'

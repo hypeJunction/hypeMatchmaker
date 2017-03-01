@@ -51,10 +51,8 @@ class Matchmaker {
 	protected $offset;
 
 	const SCORE = 'score';
-
 	const ANNOTATION_NAME_SCORE = 'matchmaker_score';
 	const ANNOTATION_NAME_INFO = 'matchmaker_info';
-	
 	const SHARED_CONNECTIONS = 'shared_connections';
 	const SHARED_GROUPS = 'shared_groups';
 	const SHARED_METADATA = 'metadata_ids';
@@ -68,7 +66,7 @@ class Matchmaker {
 	const MEMBERSHIP_RELATIONSHIP_NAMES = 'membership_relationship_names';
 	const METADATA_NAMES = 'metadata_names';
 	const RELATIONSHIP_NAME_MUTE = 'matchmaker_mute';
-	
+
 	/**
 	 * Construct a new object
 	 * 
@@ -82,21 +80,17 @@ class Matchmaker {
 	public static function getMatches($user_guid = 0, $entity_type = 'user', $entity_subtype = null, $limit = 10, $offset = 0) {
 
 		try {
-
 			switch ($entity_type) {
-				default:
 				default :
 				case 'user' :
-					return call_user_func_array(array(
-						__NAMESPACE__ . '\\UserMatchmaker',
-						'getMatches'
-							), array(
-						$user_guid,
-						$entity_type,
-						$entity_subtype,
-						$limit,
-						$offset
-					));
+					$args = [
+							$user_guid,
+							$entity_type,
+							$entity_subtype,
+							$limit,
+							$offset
+					];
+					return call_user_func_array([UserMatchmaker::class,	'getMatches'], $args);
 			}
 		} catch (InvalidArgumentException $ex) {
 			elgg_log($ex->getMessage(), 'ERROR');
@@ -142,7 +136,7 @@ class Matchmaker {
 	 * Get weight of the direct relationship matches
 	 * @return float
 	 */
-	public static  function getDirectRelationshipWeight() {
+	public static function getDirectRelationshipWeight() {
 		return (float) elgg_get_plugin_setting(self::DIRECT_RELATIONSHIPS, 'hypeMatchmaker');
 	}
 
@@ -150,7 +144,7 @@ class Matchmaker {
 	 * Get weight of the indirect relationship matches
 	 * @return float
 	 */
-	public static  function getIndirectRelationshipWeight() {
+	public static function getIndirectRelationshipWeight() {
 		return (float) elgg_get_plugin_setting(self::INDIRECT_RELATIONSHIPS, 'hypeMatchmaker');
 	}
 
@@ -158,7 +152,7 @@ class Matchmaker {
 	 * Get weight of the second degree connection matches
 	 * @return float
 	 */
-	public static  function getSecondDegreeWeight() {
+	public static function getSecondDegreeWeight() {
 		return (float) elgg_get_plugin_setting(self::SECOND_DEGREE_RELATIONSHIPS, 'hypeMatchmaker');
 	}
 
@@ -166,7 +160,7 @@ class Matchmaker {
 	 * Get weight of the shared group member matches
 	 * @return float
 	 */
-	public static  function getSharedGroupWeight() {
+	public static function getSharedGroupWeight() {
 		return (float) elgg_get_plugin_setting(self::SHARED_GROUP_RELATIONSHIPS, 'hypeMatchmaker');
 	}
 
@@ -174,7 +168,7 @@ class Matchmaker {
 	 * Get weight of the share profile tags matches
 	 * @return float
 	 */
-	public static  function getMetadataWeight() {
+	public static function getMetadataWeight() {
 		return (float) elgg_get_plugin_setting(self::SHARED_METADATA_RELATIONSHIPS, 'hypeMatchmaker');
 	}
 
@@ -182,7 +176,7 @@ class Matchmaker {
 	 * Get relationship names treated as user to user connections
 	 * @return array
 	 */
-	public static  function getConnectionRelationshipNames() {
+	public static function getConnectionRelationshipNames() {
 		$names = elgg_get_plugin_setting(self::CONNECTION_RELATIONSHIP_NAMES, 'hypeMatchmaker');
 		if (is_string($names)) {
 			$names = unserialize($names);
@@ -197,7 +191,7 @@ class Matchmaker {
 	 * Get relationship names treated as user to user friendships
 	 * @return array
 	 */
-	public static  function getFriendshipRelationshipNames() {
+	public static function getFriendshipRelationshipNames() {
 		$names = elgg_get_plugin_setting(self::FRIENDSHIP_RELATIONSHIP_NAMES, 'hypeMatchmaker');
 		if (is_string($names)) {
 			$names = unserialize($names);
@@ -213,7 +207,7 @@ class Matchmaker {
 	 * Get relationship names treated as group memberships
 	 * @return array
 	 */
-	public static  function getMembershipRelationshipNames() {
+	public static function getMembershipRelationshipNames() {
 		$names = elgg_get_plugin_setting(self::MEMBERSHIP_RELATIONSHIP_NAMES, 'hypeMatchmaker');
 		if (is_string($names)) {
 			$names = unserialize($names);
@@ -228,7 +222,7 @@ class Matchmaker {
 	 * Get metadata names of profile fields to match
 	 * @return array
 	 */
-	public static  function getMetadataNames() {
+	public static function getMetadataNames() {
 		$names = elgg_get_plugin_setting(self::METADATA_NAMES, 'hypeMatchmaker');
 		if (is_string($names)) {
 			$names = unserialize($names);
@@ -328,7 +322,7 @@ class Matchmaker {
 		if (!count($this->matches)) {
 			return;
 		}
-		
+
 		foreach ($this->matches as $guid => $info) {
 			create_annotation($guid, self::ANNOTATION_NAME_SCORE, $info['score'], '', $this->user->guid, ACCESS_PUBLIC);
 			create_annotation($guid, self::ANNOTATION_NAME_INFO, serialize($info), '', $this->user->guid, ACCESS_PRIVATE);
