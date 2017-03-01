@@ -15,8 +15,8 @@ function pagesetup() {
 			elgg_register_menu_item('page', array(
 				'name' => 'matchmaker',
 				'text' => elgg_echo('matchmaker:suggestions:users'),
-				'href' => implode('/', array(MATCHMAKER_PAGEHANDLER, 'users', $user->username)),
-				'context' => array('friends', 'friendsof', 'collections', MATCHMAKER_PAGEHANDLER),
+				'href' => "suggestions/users/$user->username",
+				'context' => array('friends', 'friendsof', 'collections', 'suggestions'),
 			));
 
 			if ($user->guid == elgg_get_logged_in_user_guid()) {
@@ -25,7 +25,7 @@ function pagesetup() {
 					'text' => elgg_echo('matchmaker:suggestions:refresh'),
 					'href' => 'action/matchmaker/refresh',
 					'is_action' => true,
-					'context' => array(MATCHMAKER_PAGEHANDLER),
+					'context' => array('suggestions'),
 					'link_class' => 'elgg-button elgg-button-action',
 				));
 			}

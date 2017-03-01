@@ -112,14 +112,3 @@ foreach ($weights as $w) {
 	echo '</div>';
 	echo '</fieldset>';
 }
-
-
-echo '<div>';
-echo '<label>' . elgg_echo("matchmaker:settings:pagehandler") . '</label>';
-echo '<span class="elgg-text-help">' . elgg_echo("matchmaker:settings:pagehandler:help") . '</span>';
-echo elgg_view('input/text', array(
-	'default' => false,
-	'name' => "params[pagehandler]",
-	'value' => (isset($entity->pagehandler)) ? $entity->pagehandler : MATCHMAKER_PAGEHANDLER,
-));
-echo '</div>';

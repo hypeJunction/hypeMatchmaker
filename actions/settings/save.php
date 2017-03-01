@@ -5,10 +5,10 @@ namespace hypeJunction\Matchmaker;
 use ElggPlugin;
 
 $params = get_input('params', array(), false); // don't filter the results so that html inputs remain unchanged
-$plugin = elgg_get_plugin_from_id(MATCHMAKER_PLUGIN_ID);
+$plugin = elgg_get_plugin_from_id('hypeMatchmaker');
 
 if (!($plugin instanceof ElggPlugin)) {
-	register_error(elgg_echo('plugins:settings:save:fail', array(MATCHMAKER_PLUGIN_ID)));
+	register_error(elgg_echo('plugins:settings:save:fail', array('hypeMatchmaker')));
 	forward(REFERER);
 }
 

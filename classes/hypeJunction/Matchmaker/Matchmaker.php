@@ -143,7 +143,7 @@ class Matchmaker {
 	 * @return float
 	 */
 	public static  function getDirectRelationshipWeight() {
-		return (float) elgg_get_plugin_setting(self::DIRECT_RELATIONSHIPS, MATCHMAKER_PLUGIN_ID);
+		return (float) elgg_get_plugin_setting(self::DIRECT_RELATIONSHIPS, 'hypeMatchmaker');
 	}
 
 	/**
@@ -151,7 +151,7 @@ class Matchmaker {
 	 * @return float
 	 */
 	public static  function getIndirectRelationshipWeight() {
-		return (float) elgg_get_plugin_setting(self::INDIRECT_RELATIONSHIPS, MATCHMAKER_PLUGIN_ID);
+		return (float) elgg_get_plugin_setting(self::INDIRECT_RELATIONSHIPS, 'hypeMatchmaker');
 	}
 
 	/**
@@ -159,7 +159,7 @@ class Matchmaker {
 	 * @return float
 	 */
 	public static  function getSecondDegreeWeight() {
-		return (float) elgg_get_plugin_setting(self::SECOND_DEGREE_RELATIONSHIPS, MATCHMAKER_PLUGIN_ID);
+		return (float) elgg_get_plugin_setting(self::SECOND_DEGREE_RELATIONSHIPS, 'hypeMatchmaker');
 	}
 
 	/**
@@ -167,7 +167,7 @@ class Matchmaker {
 	 * @return float
 	 */
 	public static  function getSharedGroupWeight() {
-		return (float) elgg_get_plugin_setting(self::SHARED_GROUP_RELATIONSHIPS, MATCHMAKER_PLUGIN_ID);
+		return (float) elgg_get_plugin_setting(self::SHARED_GROUP_RELATIONSHIPS, 'hypeMatchmaker');
 	}
 
 	/**
@@ -175,7 +175,7 @@ class Matchmaker {
 	 * @return float
 	 */
 	public static  function getMetadataWeight() {
-		return (float) elgg_get_plugin_setting(self::SHARED_METADATA_RELATIONSHIPS, MATCHMAKER_PLUGIN_ID);
+		return (float) elgg_get_plugin_setting(self::SHARED_METADATA_RELATIONSHIPS, 'hypeMatchmaker');
 	}
 
 	/**
@@ -183,7 +183,7 @@ class Matchmaker {
 	 * @return array
 	 */
 	public static  function getConnectionRelationshipNames() {
-		$names = elgg_get_plugin_setting(self::CONNECTION_RELATIONSHIP_NAMES, MATCHMAKER_PLUGIN_ID);
+		$names = elgg_get_plugin_setting(self::CONNECTION_RELATIONSHIP_NAMES, 'hypeMatchmaker');
 		if (is_string($names)) {
 			$names = unserialize($names);
 		}
@@ -198,7 +198,7 @@ class Matchmaker {
 	 * @return array
 	 */
 	public static  function getFriendshipRelationshipNames() {
-		$names = elgg_get_plugin_setting(self::FRIENDSHIP_RELATIONSHIP_NAMES, MATCHMAKER_PLUGIN_ID);
+		$names = elgg_get_plugin_setting(self::FRIENDSHIP_RELATIONSHIP_NAMES, 'hypeMatchmaker');
 		if (is_string($names)) {
 			$names = unserialize($names);
 		}
@@ -214,7 +214,7 @@ class Matchmaker {
 	 * @return array
 	 */
 	public static  function getMembershipRelationshipNames() {
-		$names = elgg_get_plugin_setting(self::MEMBERSHIP_RELATIONSHIP_NAMES, MATCHMAKER_PLUGIN_ID);
+		$names = elgg_get_plugin_setting(self::MEMBERSHIP_RELATIONSHIP_NAMES, 'hypeMatchmaker');
 		if (is_string($names)) {
 			$names = unserialize($names);
 		}
@@ -229,7 +229,7 @@ class Matchmaker {
 	 * @return array
 	 */
 	public static  function getMetadataNames() {
-		$names = elgg_get_plugin_setting(self::METADATA_NAMES, MATCHMAKER_PLUGIN_ID);
+		$names = elgg_get_plugin_setting(self::METADATA_NAMES, 'hypeMatchmaker');
 		if (is_string($names)) {
 			$names = unserialize($names);
 		}

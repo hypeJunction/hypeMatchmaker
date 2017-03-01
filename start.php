@@ -8,13 +8,9 @@
  * @author Ismayil Khayredinov <info@hypejunction.com>
  * @license GNU General Public License (GPL) version 2
  */
-
 namespace hypeJunction\Matchmaker;
 
-define('MATCHMAKER_PLUGIN_ID', basename(__DIR__));
-
-$pagehandler = elgg_get_plugin_setting('pagehandler', MATCHMAKER_PLUGIN_ID);
-define('MATCHMAKER_PAGEHANDLER', $pagehandler ? : 'suggestions');
+require_once __DIR__ . '/autoloader.php';
 
 require_once __DIR__ . '/vendors/autoload.php';
 require_once __DIR__ . '/lib/functions.php';
@@ -34,13 +30,13 @@ function init() {
 	/**
 	 * PAGE HANDLING
 	 */
-	elgg_register_page_handler(MATCHMAKER_PAGEHANDLER, __NAMESPACE__ . '\\page_handler');
+	elgg_register_page_handler('suggestions', __NAMESPACE__ . '\\page_handler');
 
 	/**
 	 * ADMIN
 	 */
-	elgg_extend_view('plugins/' . MATCHMAKER_PLUGIN_ID . '/settings', 'framework/plugins/matchmaker/settings');
-	elgg_register_action(MATCHMAKER_PLUGIN_ID . '/settings/save', __DIR__ . '/actions/settings/save.php', 'admin');
+	elgg_extend_view('plugins/hypeMatchmaker/settings', 'framework/plugins/matchmaker/settings');
+	elgg_register_action('hypeMatchmaker/settings/save', __DIR__ . '/actions/settings/save.php', 'admin');
 	
 	/**
 	 * VIEWS
