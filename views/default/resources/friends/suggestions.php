@@ -30,6 +30,7 @@ $limit = get_input('limit', 10);
 $offset = get_input('offset', 0);
 
 $matches = Matchmaker::getMatches($user->guid, 'user', '', $limit, $offset);
+$matches['pagination_type'] = false;
 
 $content = elgg_view('page/components/list', $matches);
 
