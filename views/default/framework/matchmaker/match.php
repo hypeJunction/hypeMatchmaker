@@ -10,7 +10,7 @@ $profile = '';
 foreach (['description', 'briefdescription'] as $field) {
 	if ($entity->$field) {
 		$profile = elgg_view('output/longtext', [
-			'value' => $entity->$field,
+			'value' => elgg_get_excerpt($entity->$field),
 		]);
 		break;
 	}

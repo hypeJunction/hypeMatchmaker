@@ -83,6 +83,10 @@ $english = array(
 
 	'matchmaker:details:show' => 'Show details',
 	'matchmaker:details:hide' => 'Hide details',
+
+	'widget:friend_suggestions' => 'Suggested Friends',
+	'widget:friend_suggestions:description' => 'Displays a list of users, who you share common interests and connections with',
+	'matchmaker:more' => 'More suggestions',
 );
 
 add_translation('en', $english);

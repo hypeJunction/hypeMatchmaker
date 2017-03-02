@@ -31,4 +31,7 @@ elgg_register_event_handler('init', 'system', function() {
 	elgg_register_action('matchmaker/mute', __DIR__ . '/actions/matchmaker/mute.php');
 
 	elgg_extend_view('elgg.css', 'framework/matchmaker/match.css');
+
+	// Widgets
+	elgg_register_widget_type('friend_suggestions', elgg_echo('widget:friend_suggestions'), elgg_echo('widget:friend_suggestions:desc'), ['dashboard']);
 });
