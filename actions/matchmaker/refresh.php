@@ -9,15 +9,7 @@ if (!$user || !$user->canEdit()) {
 	return elgg_error_response(elgg_echo('matchmaker:refresh:error'));
 }
 
-$result = elgg_delete_annotations([
-	'annotation_owner_guids' => $user->guid,
-	'annotation_names' => [
-		Matchmaker::ANNOTATION_NAME_INFO,
-		Matchmaker::ANNOTATION_NAME_SCORE,
-	],
-	'limit' => 0,
-]);
-
+$result = Matchmaker::invalidateCache($user->guid);
 if ($result) {
 	return elgg_ok_response('', elgg_echo('matchmaker:refresh:success'));
 }

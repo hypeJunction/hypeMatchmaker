@@ -22,7 +22,8 @@
 	},
 	"require": {
 		"php": ">5.5",
-		"composer/installers": "~1.0"
+		"composer/installers": "~1.0",
+		"hypejunction/elgg_tokeninput": "*"
 	},
 	"autoload": {
 		"psr-0": {

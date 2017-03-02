@@ -18,7 +18,8 @@ foreach (['description', 'briefdescription'] as $field) {
 
 $actions = elgg_view('framework/matchmaker/user/actions', $vars);
 
-$stats = elgg_view('framework/matchmaker/match/direct', $vars);
+$stats = elgg_view('framework/matchmaker/match/introductions', $vars);
+$stats .= elgg_view('framework/matchmaker/match/direct', $vars);
 $stats .= elgg_view('framework/matchmaker/match/indirect', $vars);
 $stats .= elgg_view('framework/matchmaker/match/connections', $vars);
 $stats .= elgg_view('framework/matchmaker/match/groups', $vars);
@@ -26,7 +27,7 @@ $stats .= elgg_view('framework/matchmaker/match/metadata', $vars);
 
 $stats = elgg_format_element('div', [
 	'class' => 'matchmaker-stats hidden',
-], $stats);
+		], $stats);
 
 echo elgg_view('object/elements/summary', [
 	'entity' => $entity,

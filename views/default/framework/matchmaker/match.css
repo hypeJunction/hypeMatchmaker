@@ -11,4 +11,9 @@
 .matchmaker-stat:last-child {
 	border-bottom: 1px solid #eee;
 }
-
+.matchmaker-introduction .elgg-output {
+    margin: 0;
+}
+.matchmaker-introduction blockquote {
+    margin: 0;
+}

@@ -38,7 +38,7 @@ echo elgg_view_field([
 	'#help' => elgg_echo("matchmaker:settings:friendship_relationship_names:help"),
 	'default' => false,
 	'name' => "params[$setting_name]",
-	'value' => (isset($entity->$setting_name)) ? unserialize($entity->$setting_name) : array('friend'),
+	'value' => (isset($entity->$setting_name)) ? unserialize($entity->$setting_name) : ['friend'],
 	'options' => $user_to_user_relationship_names,
 ]);
 
@@ -64,7 +64,7 @@ echo elgg_view_field([
 	'#help' => elgg_echo("matchmaker:settings:membership_relationship_names:help"),
 	'default' => false,
 	'name' => "params[$setting_name]",
-	'value' => (isset($entity->$setting_name)) ? unserialize($entity->$setting_name) : array('member'),
+	'value' => (isset($entity->$setting_name)) ? unserialize($entity->$setting_name) : ['member'],
 	'options' => $user_to_group_relationship_names,
 ]);
 

@@ -71,6 +71,7 @@ $english = array(
 	'matchmaker:stats:shared_connections' => 'Connections you share with %s',
 	'matchmaker:stats:shared_groups' => 'Groups you share with %s',
 	'matchmaker:stats:shared_meta' => '%s also listed %s in their %s',
+	'matchmaker:stats:introduction' => 'A friend suggestion was made by %s',
 	
 	'matchmaker:no_results' => 'There are no suggestions at this time, please check back later',
 	
@@ -87,6 +88,40 @@ $english = array(
 	'widget:friend_suggestions' => 'Suggested Friends',
 	'widget:friend_suggestions:description' => 'Displays a list of users, who you share common interests and connections with',
 	'matchmaker:more' => 'More suggestions',
+
+	'matchmaker:suggest' => 'Suggest friends',
+	'matchmaker:suggest:title' => 'Suggest Friends to %s',
+	'matchmaker:suggest:suggested_guids' => 'Select friends',
+	'matchmaker:suggest:suggested_guids:help' => 'Select one or more of your friends you would like to suggest to %s',
+	'matchmaker:suggest:introduction' => 'Introduction',
+	'matchmaker:suggest:introduction:help' => 'Optionally, please add a note for your friend explaining why you are suggesting these users',
+	'matchmaker:suggest:error:friends_only' => 'Suggestions can only be made to friends',
+	'matchmaker:suggest:error:suggested_guids' => 'Please select one or more friends you would like to suggest',
+
+	'matchmaker:suggest:count:error' => '%s of the users could not be suggested',
+	'matchmaker:suggest:count:already' => '%s of the users are already connected, have a pending request, or have been suggested previously',
+	'matchmaker:suggest:count:success' => '%s of the users have been suggested',
+
+	'matchmaker:suggest:notify:intro_text' => '
+
+	The following reason has been given for the suggestion:
+	%s
+	',
+
+	'matchmaker:suggest:notify:subject' => 'You have a new friend suggestion',
+	'matchmaker:suggest:notify:summary' => '%s made a suggestion to connect with %s',
+	'matchmaker:suggest:notify:message' => '
+		%1$s has suggested a connection with %2$s.
+
+		%3$s
+
+		You can view %2$s\'s profile here:
+		%4$s
+
+		You can view all of your friend suggestions here:
+		%5$s
+	',
+
 );
 
 add_translation('en', $english);

@@ -5,8 +5,10 @@ hypeMatchmaker
 Match users by existing relationships, second degree connections, group membership and profile information
 
 Features:
-* Define relationships that qualify connections, friendships and memberships
-* Specify which profile fields should be used for match-making
+
+* Users can suggest friends to each other
+* Automated suggestions based on user connections, friendships and group membership
+* Automated suggestions based on profile fields and tags
 * Weighed matching algorithms and relevance scoring
 * Performance-oriented
 

@@ -20,8 +20,15 @@ class Router {
 
 		switch ($handler) {
 			case 'suggestions' :
-				$username = array_shift($username);
+				$username = array_shift($segments);
 				echo elgg_view_resource('friends/suggestions', [
+					'username' => $username,
+				]);
+				return false;
+
+			case 'suggest' :
+				$username = array_shift($segments);
+				echo elgg_view_resource('friends/suggest', [
 					'username' => $username,
 				]);
 				return false;

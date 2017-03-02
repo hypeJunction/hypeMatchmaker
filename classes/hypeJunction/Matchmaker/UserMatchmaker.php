@@ -49,6 +49,7 @@ class UserMatchmaker extends Matchmaker {
 	protected function getMatchesFromCache() {
 
 		$in_friendships = $this->getInFriendshipsClause();
+
 		$options = array(
 			'types' => 'user',
 			'subtypes' => $this->subtype,
@@ -58,31 +59,31 @@ class UserMatchmaker extends Matchmaker {
 			'count' => true,
 			'limit' => $this->limit,
 			'offset' => $this->offset,
+			'order_by' => 'annotation_calculation DESC',
 			'wheres' => array(
-				"(NOT EXISTS(SELECT * 
-					FROM {$this->dbprefix}entity_relationships r
-					WHERE r.guid_one = e.guid 
-					AND r.guid_two = n_table.owner_guid 
-					AND r.relationship IN ($in_friendships)))", // current user hasn't added the suggested person as friend
-			)
+				"NOT EXISTS(
+					SELECT 1
+					FROM {$this->dbprefix}entity_relationships
+					WHERE guid_one = {$this->user->guid}
+					AND guid_two = n_table.entity_guid
+					AND relationship IN ($in_friendships)
+				)",
+			),
 		);
 
 		$count = elgg_get_entities_from_annotation_calculation($options);
-
 		if (!$count) {
 			$this->getMatchesFromDatabase();
 		}
-
 		unset($options['count']);
 
 		$items = elgg_get_entities_from_annotation_calculation($options);
 		if ($items) {
-			foreach ($items as $item) {
+			foreach ($items as $item) {				
 				$annotations = elgg_get_annotations(array(
 					'guids' => $item->guid,
 					'annotation_names' => self::ANNOTATION_NAME_INFO,
 					'annotation_owner_guids' => $this->user->guid,
-					'limit' => 1,
 				));
 				if (is_array($annotations) && count($annotations)) {
 					$info = unserialize($annotations[0]->value);
@@ -92,6 +93,7 @@ class UserMatchmaker extends Matchmaker {
 				}
 			}
 		}
+
 		return array(
 			'count' => $count,
 			'items' => $items,
@@ -108,12 +110,76 @@ class UserMatchmaker extends Matchmaker {
 	 * @return void
 	 */
 	protected function getMatchesFromDatabase() {
+		$this->getSuggestedMatches();
 		$this->getDirectRelationshipMatches();
 		$this->getIndirectRelationshipMatches();
 		$this->getSecondDegreeMatches();
 		$this->getSharedGroupsMatches();
 		$this->getMetadataMatches();
+		$this->sort();
 		$this->cache();
+	}
+
+	/**
+	 * Get users that were suggested to this user
+	 * @return void
+	 */
+	protected function getSuggestedMatches() {
+
+		$weight = 100;
+
+		$in_friendships = $this->getInFriendshipsClause();
+
+		$suggestions = elgg_get_entities([
+			'types' => 'user',
+			'subtypes' => $this->entity_subtype,
+			'wheres' => [
+				"EXISTS(
+					SELECT 1
+					FROM {$this->dbprefix}entity_relationships
+					WHERE guid_one = {$this->user->guid}
+					AND guid_two = e.guid
+					AND relationship = 'suggested_friend'
+				)",
+				"NOT EXISTS(
+					SELECT 1
+					FROM {$this->dbprefix}entity_relationships
+					WHERE guid_one = {$this->user->guid}
+					AND guid_two = e.guid
+					AND relationship IN ($in_friendships)
+				)", // current user hasn't added the suggested person as friend
+			],
+			'callback' => false,
+			'limit' => 0,
+			'batch' => true,
+		]);
+
+		foreach ($suggestions as $suggestion) {
+			
+			if (!isset($this->matches[$suggestion->guid])) {
+				$this->matches[$suggestion->guid] = array();
+			}
+			$this->matches[$suggestion->guid][self::SCORE] += $weight;
+
+			$ia = elgg_set_ignore_access(true);
+
+			$intros = elgg_get_entities_from_metadata([
+				'types' => 'object',
+				'subtypes' => 'suggested_friend',
+				'container_guids' => (int) $this->user->guid,
+				'metadata_name_value_pairs' => [
+					'suggested_guid' => (int) $suggestion->guid,
+				],
+				'limit' => 0,
+				'batch' => true,
+			]);
+
+			foreach ($intros as $intro) {
+				$this->matches[$suggestion->guid][self::INTRODUCTIONS][$intro->owner_guid] = $intro->description;
+			}
+
+			elgg_set_ignore_access($ia);
+		}
 	}
 
 	/**
@@ -130,10 +196,13 @@ class UserMatchmaker extends Matchmaker {
 			return;
 		}
 
-		$suggestions = new ElggBatch('elgg_get_entities_from_relationship', array(
+		$suggestions = elgg_get_entities_from_relationship([
 			'types' => 'user',
 			'subtypes' => $this->entity_subtype,
-			'selects' => array('COUNT(r.relationship) as score', 'GROUP_CONCAT(r.relationship) as relationships'),
+			'selects' => [
+				'COUNT(r.relationship) as score',
+				'GROUP_CONCAT(r.relationship) as relationships'
+			],
 			'group_by' => 'r.guid_two',
 			'relationship_guid' => $this->user->guid,
 			'wheres' => array(
@@ -146,9 +215,11 @@ class UserMatchmaker extends Matchmaker {
 			),
 			'callback' => false,
 			'limit' => 0,
-		));
+			'batch' => true,
+		]);
 
 		foreach ($suggestions as $suggestion) {
+
 			if (!isset($this->matches[$suggestion->guid])) {
 				$this->matches[$suggestion->guid] = array();
 			}
@@ -171,16 +242,19 @@ class UserMatchmaker extends Matchmaker {
 			return;
 		}
 
-		$suggestions = new ElggBatch('elgg_get_entities_from_relationship', array(
+		$suggestions = elgg_get_entities_from_relationship([
 			'types' => 'user',
 			'subtypes' => $this->entity_subtype,
-			'selects' => array('COUNT(r.relationship) as score', 'GROUP_CONCAT(r.relationship) as relationships'),
+			'selects' => [
+				'COUNT(r.relationship) as score',
+				'GROUP_CONCAT(r.relationship) as relationships',
+			],
 			'group_by' => 'r.guid_one',
 			'relationship_guid' => $this->user->guid,
 			'inverse_relationship' => true,
 			'wheres' => array(
 				"(r.relationship IN ($in_connections))",
-				"NOT EXISTS(SELECT * 
+				"NOT EXISTS(SELECT *
 					FROM {$this->dbprefix}entity_relationships r2 
 					WHERE r2.guid_one = r.guid_two 
 					AND r2.guid_two = r.guid_one
@@ -188,9 +262,11 @@ class UserMatchmaker extends Matchmaker {
 			),
 			'callback' => false,
 			'limit' => 0,
-		));
+			'batch' => true,
+		]);
 
 		foreach ($suggestions as $suggestion) {
+
 			if (!isset($this->matches[$suggestion->guid])) {
 				$this->matches[$suggestion->guid] = array();
 			}
@@ -213,10 +289,13 @@ class UserMatchmaker extends Matchmaker {
 			return;
 		}
 
-		$suggestions = new ElggBatch('elgg_get_entities', array(
+		$suggestions = elgg_get_entities([
 			'types' => 'user',
 			'subtypes' => $this->entity_subtype,
-			'selects' => array('COUNT(r2.relationship) as score', 'GROUP_CONCAT(r2.guid_two) as shared_connections'),
+			'selects' => [
+				'COUNT(r2.relationship) as score',
+				'GROUP_CONCAT(r2.guid_two) as shared_connections',
+			],
 			'group_by' => 'r1.guid_one',
 			'joins' => array(
 				"JOIN {$this->dbprefix}entity_relationships r1 ON e.guid = r1.guid_one",
@@ -235,9 +314,11 @@ class UserMatchmaker extends Matchmaker {
 			),
 			'callback' => false,
 			'limit' => 0,
-		));
+			'batch' => true,
+		]);
 
 		foreach ($suggestions as $suggestion) {
+
 			if (!isset($this->matches[$suggestion->guid])) {
 				$this->matches[$suggestion->guid] = array();
 			}
@@ -261,7 +342,7 @@ class UserMatchmaker extends Matchmaker {
 		}
 
 		// Get shared group members
-		$suggestions = new ElggBatch('elgg_get_entities', array(
+		$suggestions = elgg_get_entities([
 			'types' => 'user',
 			'subtypes' => $this->entity_subtype,
 			'selects' => array('COUNT(r2.relationship) as score', 'GROUP_CONCAT(r2.guid_two) as groups'),
@@ -276,7 +357,7 @@ class UserMatchmaker extends Matchmaker {
 				"r2.relationship IN ($in_memberships)", // bridging relationships
 				"r1.guid_one != r2.guid_one", // exclude connections to self via bridging relationships
 				"r2.guid_one = {$this->user->guid}", // connected to self via bridging relationships
-				"NOT EXISTS(SELECT * 
+				"NOT EXISTS(SELECT *
 					FROM {$this->dbprefix}entity_relationships r3 
 					WHERE r3.guid_one = r2.guid_one 
 					AND r3.guid_two = r1.guid_one
@@ -284,9 +365,11 @@ class UserMatchmaker extends Matchmaker {
 			),
 			'callback' => false,
 			'limit' => 0,
-		));
+			'batch' => true,
+		]);
 
 		foreach ($suggestions as $suggestion) {
+
 			if (!isset($this->matches[$suggestion->guid])) {
 				$this->matches[$suggestion->guid] = array();
 			}
@@ -309,7 +392,7 @@ class UserMatchmaker extends Matchmaker {
 			return;
 		}
 
-		$suggestions = new ElggBatch('elgg_get_entities', array(
+		$suggestions = elgg_get_entities([
 			'types' => 'user',
 			'subtypes' => $this->entity_subtype,
 			'selects' => array('COUNT(md2.id) as score', "GROUP_CONCAT(md2.id) as metadata_ids"),
@@ -331,9 +414,11 @@ class UserMatchmaker extends Matchmaker {
 			),
 			'callback' => false,
 			'limit' => 0,
-		));
-					
+			'batch' => true,
+		]);
+
 		foreach ($suggestions as $suggestion) {
+			
 			if (!isset($this->matches[$suggestion->guid])) {
 				$this->matches[$suggestion->guid] = array();
 			}

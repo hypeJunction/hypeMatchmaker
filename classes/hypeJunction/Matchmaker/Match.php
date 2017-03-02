@@ -45,6 +45,25 @@ class Match {
 	}
 
 	/**
+	 * Get suggestion score
+	 * @return int
+	 */
+	public function getScore() {
+		return (int) $this->options[Matchmaker::SCORE];
+	}
+
+	/**
+	 * Get a list of introductions
+	 * @return array|boolean
+	 */
+	public function getIntroductions() {
+		if (isset($this->options[Matchmaker::INTRODUCTIONS])) {
+			return $this->options[Matchmaker::INTRODUCTIONS];
+		}
+		return false;
+	}
+
+	/**
 	 * Get a list of direct relationships
 	 * @return array|boolean
 	 */

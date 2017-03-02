@@ -52,20 +52,27 @@ class Menus {
 		if (!$entity instanceof ElggUser) {
 			return;
 		}
-		
+
 		$match = $entity->getVolatileData('matchmaker');
-		if (!$match) {
-			return;
+		if ($match) {
+			$return[] = ElggMenuItem::factory([
+						'name' => 'matchmaker:mute',
+						'text' => elgg_echo('matchmaker:suggestions:mute'),
+						'href' => 'action/matchmaker/mute?match_guid=' . $entity->guid,
+						'is_action' => true,
+						'section' => 'action',
+			]);
 		}
 
-		$return[] = ElggMenuItem::factory(array(
-					'name' => 'matchmaker:mute',
-					'text' => elgg_echo('matchmaker:suggestions:mute'),
-					'href' => 'action/matchmaker/mute?match_guid=' . $entity->guid,
-					'is_action' => true,
-					'section' => 'action',
-		));
-
+		if ($entity->isFriend()) {
+			$return[] = ElggmenuItem::factory([
+				'name' => 'matchmaker:suggest',
+				'text' => elgg_echo('matchmaker:suggest'),
+				'href' => "friends/suggest/$entity->username",
+				'section' => 'action',
+			]);
+		}
+		
 		return $return;
 	}
 

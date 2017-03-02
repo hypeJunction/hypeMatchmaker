@@ -2,7 +2,6 @@
 
 use hypeJunction\Matchmaker\Matchmaker;
 
-$context = elgg_extract('context', $vars, 'users', false);
 $username = elgg_extract('username', $vars);
 if ($username) {
 	$user = get_user_by_username($username);
@@ -37,8 +36,7 @@ $content = elgg_view('page/components/list', $matches);
 if (elgg_is_xhr()) {
 	echo $content;
 } else {
-	$title = elgg_echo("matchmaker:suggestions:$context");
-
+	$title = elgg_echo("matchmaker:suggestions:users");
 	$layout = elgg_view_layout('content', array(
 		'title' => $title,
 		'content' => $content,

@@ -16,5 +16,10 @@
 		<type>elgg_release</type>
 		<version>2.3</version>
 	</requires>
+
+	<requires>
+		<type>plugin</type>
+		<name>elgg_tokeninput</name>
+	</requires>
 	
 </plugin_manifest>

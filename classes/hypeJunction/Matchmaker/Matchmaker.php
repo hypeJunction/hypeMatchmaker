@@ -66,6 +66,7 @@ class Matchmaker {
 	const MEMBERSHIP_RELATIONSHIP_NAMES = 'membership_relationship_names';
 	const METADATA_NAMES = 'metadata_names';
 	const RELATIONSHIP_NAME_MUTE = 'matchmaker_mute';
+	const INTRODUCTIONS = 'introductions';
 
 	/**
 	 * Construct a new object
@@ -184,7 +185,7 @@ class Matchmaker {
 		if (is_array($names) && count($names) > 0) {
 			return array_unique($names);
 		}
-		return array('friend');
+		return ['friend'];
 	}
 
 	/**
@@ -197,10 +198,10 @@ class Matchmaker {
 			$names = unserialize($names);
 		}
 		if (is_array($names) && count($names) > 0) {
-			$names[] = RELATIONSHIP_NAME_MUTE;
+			$names[] = self::RELATIONSHIP_NAME_MUTE;
 			return array_unique($names);
 		}
-		return array('friend', 'matchmaker_ignored');
+		return ['friend', 'friendrequest', 'matchmaker_ignored'];
 	}
 
 	/**
@@ -215,7 +216,7 @@ class Matchmaker {
 		if (is_array($names) && count($names) > 0) {
 			return array_unique($names);
 		}
-		return array('member');
+		return ['member'];
 	}
 
 	/**
@@ -301,7 +302,7 @@ class Matchmaker {
 		switch ($by) {
 			default :
 			case 'score' :
-				usort($this->matches, function($a, $b) {
+				uasort($this->matches, function($a, $b) {
 					if ($a['score'] == $b['score']) {
 						return 0;
 					}
@@ -317,7 +318,7 @@ class Matchmaker {
 	 */
 	protected function cache() {
 
-		$this->invalidateCache();
+		self::invalidateCache($this->user->guid);
 
 		if (!count($this->matches)) {
 			return;
@@ -331,13 +332,19 @@ class Matchmaker {
 
 	/**
 	 * Remove cached match information
+	 *
+	 * @param int $entity_guid GUID
+	 * @return bool
 	 */
-	protected function invalidateCache() {
-		return elgg_delete_annotations(array(
-			'annotation_owner_guids' => $this->user->guid,
-			'annotation_names' => array(self::ANNOTATION_NAME_INFO, self::ANNOTATION_NAME_SCORE),
+	public static function invalidateCache($entity_guid) {
+		return elgg_delete_annotations([
+			'annotation_owner_guids' => (int) $entity_guid,
+			'annotation_names' => [
+				self::ANNOTATION_NAME_INFO,
+				self::ANNOTATION_NAME_SCORE,
+			],
 			'limit' => 0,
-		));
+		]);
 	}
 
 }
