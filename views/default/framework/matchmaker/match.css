@@ -1,8 +1,14 @@
+.elgg-menu-matchmaker-actions {
+    margin: 10px 0;
+}
+.elgg-menu-matchmaker-actions > li {
+    margin-right: 10px;
+}
 .matchmaker-stat {
     padding: 5px;
-    border-bottom: 1px solid #eee;
+    border-top: 1px solid #eee;
 }
 .matchmaker-stat:last-child {
-	border-bottom: none;
+	border-bottom: 1px solid #eee;
 }
 

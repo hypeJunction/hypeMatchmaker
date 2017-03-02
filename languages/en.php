@@ -80,6 +80,9 @@ $english = array(
 	'matchmaker:suggestions:mute' => 'Remove from suggestions',
 	'matchmaker:mute:success' => 'User was successfully removed from your suggestions',
 	'matchmaker:mute:error' => 'User could not be removed from your suggestions',
+
+	'matchmaker:details:show' => 'Show details',
+	'matchmaker:details:hide' => 'Hide details',
 );
 
 add_translation('en', $english);
